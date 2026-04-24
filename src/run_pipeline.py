@@ -1,6 +1,12 @@
 import argparse
 import os
+import sys
 import yaml
+
+# Ensure project root is on PYTHONPATH so `src` imports work when called by DVC
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
 
 from src.preprocess import preprocess, save_splits
 from src.models import train_and_log
