@@ -25,3 +25,41 @@ stages:
       hash: md5
       md5: 6f012c02de6630545fbf0a990e52b1ec
       size: 1058544
+  run_pipeline:
+    cmd: python src/run_pipeline.py --data-path deceptive-opinion.csv --params 
+      params.yaml --model-out models/tfidf_lr.joblib
+    deps:
+    - path: deceptive-opinion.csv
+      hash: md5
+      md5: 3cdb5a46f9ffcb4929f4f3f272c0b9e8
+      size: 1349623
+    - path: params.yaml
+      hash: md5
+      md5: f6ec1382aa15a44574249216da4affc4
+      size: 158
+    - path: src/evaluate_pickled.py
+      hash: md5
+      md5: 710272d5214e771412e88d34054366c6
+      size: 1598
+    - path: src/models.py
+      hash: md5
+      md5: dedf8ee9d815a59865e2df516e48ea02
+      size: 1851
+    - path: src/preprocess.py
+      hash: md5
+      md5: 22466ea654191378341271c892832e63
+      size: 1910
+    - path: src/run_pipeline.py
+      hash: md5
+      md5: c46a78cb7eace900e348b751f3f0bd5e
+      size: 2494
+    outs:
+    - path: models/tfidf_lr.joblib
+      hash: md5
+      md5: da34ddcdc73470d69ceafae37fecb7cc
+      size: 990900
+    - path: outputs/latest
+      hash: md5
+      md5: 318a43fe96ceb2c0d981d01b11ca4f83.dir
+      size: 1005322
+      nfiles: 4
