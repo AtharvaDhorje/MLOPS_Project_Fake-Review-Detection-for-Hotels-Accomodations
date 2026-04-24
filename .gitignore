@@ -6,4 +6,7 @@ env/
 models/
 *.pyc
 /.vscode/
+mlruns/
+data/processed/
+outputs/
 /deceptive-opinion.csv

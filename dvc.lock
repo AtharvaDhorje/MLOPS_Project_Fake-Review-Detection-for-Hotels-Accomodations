@@ -1,0 +1,27 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py --data-path deceptive-opinion.csv --out-dir 
+      data/processed
+    deps:
+    - path: deceptive-opinion.csv
+      hash: md5
+      md5: 3cdb5a46f9ffcb4929f4f3f272c0b9e8
+      size: 1349623
+    - path: params.yaml
+      hash: md5
+      md5: f6ec1382aa15a44574249216da4affc4
+      size: 158
+    - path: src/preprocess.py
+      hash: md5
+      md5: 22466ea654191378341271c892832e63
+      size: 1910
+    outs:
+    - path: data/processed/test.pkl
+      hash: md5
+      md5: 156a13b4529bfe8fed773b50e9472057
+      size: 261291
+    - path: data/processed/train.pkl
+      hash: md5
+      md5: 6f012c02de6630545fbf0a990e52b1ec
+      size: 1058544
