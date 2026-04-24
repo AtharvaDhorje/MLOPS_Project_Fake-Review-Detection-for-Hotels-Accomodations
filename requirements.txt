@@ -8,3 +8,5 @@ seaborn
 mlflow
 dvc
 pytest
+fastapi
+uvicorn[standard]

@@ -23,6 +23,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Start MLflow server (SQLite backend) and set env
+        run: |
+          # start mlflow server in background and point CI to it
+          nohup mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns --host 127.0.0.1 -p 5000 > mlflow.log 2>&1 &
+          sleep 3
+          echo "MLFLOW_TRACKING_URI=http://127.0.0.1:5000" >> $GITHUB_ENV
+          echo "MLFLOW_EXPERIMENT=fake-review-hotel" >> $GITHUB_ENV
+
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
@@ -46,6 +54,7 @@ jobs:
 
       - name: Reproduce pipeline
         run: |
+          # ensure MLflow env is set for DVC-run scripts
           dvc repro
 
       - name: Run tests (if any)
@@ -56,6 +65,16 @@ jobs:
         if: ${{ secrets.DVC_REMOTE_URL != '' }}
         run: |
           dvc push
+
+      - name: Upload MLflow runs and outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-and-outputs
+          path: |
+            mlruns
+            mlflow.db
+            outputs/latest
+            models
 
   deploy:
     name: Build & Push Docker

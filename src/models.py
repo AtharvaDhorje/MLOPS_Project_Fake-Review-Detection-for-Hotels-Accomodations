@@ -13,7 +13,7 @@ from sklearn.pipeline import Pipeline
 def build_pipeline(params: Dict):
     ngram_range = (params.get("ngram_min", 1), params.get("ngram_max", 2))
     tfidf = TfidfVectorizer(ngram_range=ngram_range, max_features=params.get("max_features", 20000), stop_words="english")
-    clf = LogisticRegression(max_iter=params.get("max_iter", 1000))
+    clf = LogisticRegression(C=params.get("C", 1.0), max_iter=params.get("max_iter", 1000))
     pipeline = Pipeline([("tfidf", tfidf), ("clf", clf)])
     return pipeline
 

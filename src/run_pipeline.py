@@ -2,6 +2,13 @@ import argparse
 import os
 import sys
 import yaml
+import mlflow
+
+# Ensure MLflow uses a SQL-backed store by default so the UI Overview tab works.
+# If the environment hasn't set a tracking URI, fallback to a local SQLite DB.
+if not os.getenv("MLFLOW_TRACKING_URI"):
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    os.environ["MLFLOW_TRACKING_URI"] = "sqlite:///mlflow.db"
 
 # Ensure project root is on PYTHONPATH so `src` imports work when called by DVC
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -29,7 +36,7 @@ def run_pipeline(data_path: str, params_file: str = "params.yaml", model_out: st
 
     # Evaluate on the test split
     test_pkl = os.path.join("data/processed", "test.pkl")
-    metrics_path = evaluate_pickled(test_pkl, model_path, out_dir="outputs")
+    metrics_path = evaluate_pickled(test_pkl, model_path, out_dir="outputs", run_id=run_id)
 
     # Run monitoring comparing train vs test
     from src.monitor_service import run_monitoring
