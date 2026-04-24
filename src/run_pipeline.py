@@ -4,6 +4,7 @@ import yaml
 
 from src.preprocess import preprocess, save_splits
 from src.models import train_and_log
+from src.evaluate_pickled import evaluate_pickled
 
 
 def run_pipeline(data_path: str, params_file: str = "params.yaml", model_out: str = "models/tfidf_lr.joblib"):
@@ -19,6 +20,10 @@ def run_pipeline(data_path: str, params_file: str = "params.yaml", model_out: st
 
     train_pkl = os.path.join("data/processed", "train.pkl")
     model_path = train_and_log(train_pkl, model_out, params)
+
+    # Evaluate on the test split
+    test_pkl = os.path.join("data/processed", "test.pkl")
+    evaluate_pickled(test_pkl, model_path, out_dir="outputs")
 
     print("Pipeline completed. Model at:", model_path)
     return model_path

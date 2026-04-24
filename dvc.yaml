@@ -1,28 +1,13 @@
 stages:
-  preprocess:
-    cmd: python src/preprocess.py --data-path ${dvc.data} --out-dir data/processed
+  run_pipeline:
+    cmd: python src/run_pipeline.py --data-path ${dvc.data} --params params.yaml --model-out models/tfidf_lr.joblib
     deps:
+      - src/run_pipeline.py
       - src/preprocess.py
+      - src/models.py
+      - src/evaluate_pickled.py
       - params.yaml
       - ${dvc.data}
     outs:
-      - data/processed/train.pkl
-      - data/processed/test.pkl
-
-  train:
-    cmd: python src/train_mlflow.py --data-path data/processed/train.pkl --params params.yaml --model-out models/tfidf_lr.joblib
-    deps:
-      - src/train_mlflow.py
-      - params.yaml
-      - data/processed/train.pkl
-    outs:
       - models/tfidf_lr.joblib
-
-  evaluate:
-    cmd: python src/evaluate.py --data-path data/processed/test.pkl --model-path models/tfidf_lr.joblib --out-dir outputs
-    deps:
-      - src/evaluate.py
-      - models/tfidf_lr.joblib
-      - data/processed/test.pkl
-    outs:
       - outputs/confusion_matrix.png
