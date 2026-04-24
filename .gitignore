@@ -6,3 +6,4 @@ env/
 models/
 *.pyc
 /.vscode/
+/deceptive-opinion.csv
