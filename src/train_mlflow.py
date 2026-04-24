@@ -2,36 +2,12 @@ import argparse
 import os
 import pickle
 
-import joblib
-import mlflow
-import mlflow.sklearn
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from src.models import train_and_log
 
 
 def train_mlflow(train_pkl: str, model_out: str, params: dict):
-    with open(train_pkl, "rb") as f:
-        train = pickle.load(f)
-
-    X_train = train["text"]
-    y_train = train["label"]
-
-    ngram_range = (params.get("ngram_min", 1), params.get("ngram_max", 2))
-    tfidf = TfidfVectorizer(ngram_range=ngram_range, max_features=params.get("max_features", 20000), stop_words="english")
-    clf = LogisticRegression(max_iter=params.get("max_iter", 1000))
-    pipeline = Pipeline([("tfidf", tfidf), ("clf", clf)])
-
-    mlflow.set_experiment("fake-review-hotel")
-    with mlflow.start_run() as run:
-        mlflow.log_params({"ngram_range": ngram_range, "max_features": params.get("max_features"), "max_iter": params.get("max_iter")})
-        pipeline.fit(X_train, y_train)
-        mlflow.sklearn.log_model(pipeline, "model")
-        mlflow.log_artifact(train_pkl, artifact_path="train_data")
-
-    os.makedirs(os.path.dirname(model_out), exist_ok=True)
-    joblib.dump(pipeline, model_out)
-    print(f"Model saved to {model_out}")
+    model_path = train_and_log(train_pkl, model_out, params)
+    print(f"Model saved to {model_path}")
 
 
 if __name__ == "__main__":
