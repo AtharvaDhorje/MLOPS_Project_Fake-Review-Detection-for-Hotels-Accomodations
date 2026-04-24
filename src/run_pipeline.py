@@ -36,6 +36,24 @@ def run_pipeline(data_path: str, params_file: str = "params.yaml", model_out: st
 
     monitor_path = run_monitoring(train_pkl, test_pkl, model_path, out_dir="outputs", run_id=run_id)
 
+    # Archive run outputs into run-specific folder and update outputs/latest
+    import shutil
+
+    run_folder = os.path.join("outputs", f"runs", run_id)
+    latest_folder = os.path.join("outputs", "latest")
+    os.makedirs(run_folder, exist_ok=True)
+    os.makedirs(latest_folder, exist_ok=True)
+
+    # files to archive
+    candidates = [metrics_path, monitor_path, os.path.join("outputs", "confusion_matrix.png")]
+    # copy model too
+    candidates.append(model_path)
+
+    for p in candidates:
+        if p and os.path.exists(p):
+            shutil.copy(p, run_folder)
+            shutil.copy(p, latest_folder)
+
     print("Pipeline completed. Model at:", model_path)
     return model_path
 

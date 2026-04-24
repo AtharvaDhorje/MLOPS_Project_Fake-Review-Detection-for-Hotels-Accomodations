@@ -10,4 +10,4 @@ stages:
       - ${dvc.data}
     outs:
       - models/tfidf_lr.joblib
-      - outputs/confusion_matrix.png
+      - outputs/latest
