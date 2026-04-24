@@ -18,8 +18,7 @@ def evaluate_pickled(test_pkl: str, model_path: str, out_dir: str = "outputs"):
     model = joblib.load(model_path)
     y_pred = model.predict(X_test)
 
-    report = classification_report(y_test, y_pred)
-    print(report)
+    report = classification_report(y_test, y_pred, output_dict=True)
 
     cm = confusion_matrix(y_test, y_pred)
     os.makedirs(out_dir, exist_ok=True)
@@ -31,7 +30,17 @@ def evaluate_pickled(test_pkl: str, model_path: str, out_dir: str = "outputs"):
     plt.tight_layout()
     out_path = os.path.join(out_dir, "confusion_matrix.png")
     plt.savefig(out_path)
+
+    # save metrics JSON
+    metrics_path = os.path.join(out_dir, "metrics.json")
+    import json
+
+    with open(metrics_path, "w") as f:
+        json.dump(report, f, indent=2)
+
     print(f"Confusion matrix saved to {out_path}")
+    print(f"Metrics saved to {metrics_path}")
+    return metrics_path
 
 
 if __name__ == "__main__":

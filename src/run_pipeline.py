@@ -25,11 +25,16 @@ def run_pipeline(data_path: str, params_file: str = "params.yaml", model_out: st
     save_splits(df2, out_dir="data/processed", test_size=params.get("test_size", 0.2), random_state=params.get("random_state", 42))
 
     train_pkl = os.path.join("data/processed", "train.pkl")
-    model_path = train_and_log(train_pkl, model_out, params)
+    model_path, run_id = train_and_log(train_pkl, model_out, params)
 
     # Evaluate on the test split
     test_pkl = os.path.join("data/processed", "test.pkl")
-    evaluate_pickled(test_pkl, model_path, out_dir="outputs")
+    metrics_path = evaluate_pickled(test_pkl, model_path, out_dir="outputs")
+
+    # Run monitoring comparing train vs test
+    from src.monitor_service import run_monitoring
+
+    monitor_path = run_monitoring(train_pkl, test_pkl, model_path, out_dir="outputs", run_id=run_id)
 
     print("Pipeline completed. Model at:", model_path)
     return model_path

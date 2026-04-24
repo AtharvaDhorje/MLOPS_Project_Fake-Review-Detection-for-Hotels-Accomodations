@@ -6,8 +6,8 @@ from src.models import train_and_log
 
 
 def train_mlflow(train_pkl: str, model_out: str, params: dict):
-    model_path = train_and_log(train_pkl, model_out, params)
-    print(f"Model saved to {model_path}")
+    model_path, run_id = train_and_log(train_pkl, model_out, params)
+    print(f"Model saved to {model_path} (run_id={run_id})")
 
 
 if __name__ == "__main__":

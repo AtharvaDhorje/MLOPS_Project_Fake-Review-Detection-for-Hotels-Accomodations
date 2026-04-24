@@ -42,6 +42,8 @@ def train_and_log(train_pkl: str, model_out: str, params: Dict, experiment_name:
         mlflow.sklearn.log_model(pipeline, "model")
         mlflow.log_artifact(train_pkl, artifact_path="train_data")
 
+        run_id = run.info.run_id
+
     os.makedirs(os.path.dirname(model_out), exist_ok=True)
     joblib.dump(pipeline, model_out)
-    return model_out
+    return model_out, run_id
