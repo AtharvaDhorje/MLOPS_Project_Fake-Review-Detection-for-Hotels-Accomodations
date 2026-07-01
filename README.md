@@ -1,4 +1,4 @@
-# Fake Review Detection for Hotels
+# MLOPS_Project_Fake-Review-Detection-for-Hotels & Accomodations
 
 This project provides a baseline pipeline to detect fake (deceptive) reviews for the hotel & accommodation domain using the provided `deceptive-opinion.csv` dataset.
 
